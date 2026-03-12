@@ -35,8 +35,8 @@ If a split makes sense, tell the user:
 ```
 I see changes in two unrelated areas. It'd be better to split these into two commits:
 
-1. build(android): upgrade compileSdkVersion to 34
-2. chore(deps): bump react-native-camera and axios
+1. build(ios): upgrade deployment target to iOS 16
+2. chore(deps): bump react-navigation and lodash
 
 Want me to stage and commit them one by one?
 ```
@@ -71,7 +71,7 @@ BREAKING CHANGE: description  ← only if applicable
 | `style` | Formatting, whitespace — no logic change |
 
 ### Scope
-- Derived from the **module or area changed** (e.g., `voucher`, `auth`, `android`, `deps`)
+- Derived from the **module or area changed** (e.g., `auth`, `checkout`, `profile`, `deps`)
 - kebab-case, lowercase
 - Omit only if the change is truly global
 
@@ -89,9 +89,9 @@ The body is **optional**. Only add it when the subject line alone doesn't explai
 
 Good example (body needed):
 ```
-fix(voucher): restrict DeunaVeci to CNB schema only
+fix(auth): redirect to login when session expires
 
-DeunaVeci was appearing in non-CNB flows, breaking business rules.
+Token expiration was not being caught, leaving users on a blank screen.
 ```
 
 Good example (no body needed):
@@ -111,7 +111,7 @@ Present it clearly:
 Here's the commit message:
 
 ---
-fix(voucher): restrict DeunaVeci to CNB schema only
+fix(auth): redirect to login when session expires
 ---
 
 Good to go? I'll commit once you confirm.
