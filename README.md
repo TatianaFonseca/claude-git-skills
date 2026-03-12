@@ -8,8 +8,8 @@ A collection of Claude Code skills to streamline your git workflow using [Conven
 |-------|-------------|
 | [`smart-branch`](#smart-branch) | Generates a branch name before you start working |
 | [`smart-commit`](#smart-commit) | Generates a commit message when you're ready to commit |
-
-More skills coming soon: `smart-pr`, `changelog`.
+| [`smart-pr`](#smart-pr) | Generates a PR title and description from your branch commits |
+| [`smart-changelog`](#smart-changelog) | Generates or updates CHANGELOG.md from your commit history |
 
 ---
 
@@ -24,6 +24,8 @@ More skills coming soon: `smart-pr`, `changelog`.
 git clone https://github.com/TatianaFonseca/claude-git-skills
 cp -r claude-git-skills/smart-branch ~/.claude/skills/
 cp -r claude-git-skills/smart-commit ~/.claude/skills/
+cp -r claude-git-skills/smart-pr ~/.claude/skills/
+cp -r claude-git-skills/smart-changelog ~/.claude/skills/
 ```
 
 That's it. Claude Code picks them up automatically — no restart needed.
@@ -32,7 +34,16 @@ That's it. Claude Code picks them up automatically — no restart needed.
 
 ```bash
 git clone https://github.com/TatianaFonseca/claude-git-skills
-cp -r claude-git-skills/smart-commit ~/.claude/skills/   # or smart-branch
+cp -r claude-git-skills/smart-commit ~/.claude/skills/   # replace with any skill name
+```
+
+---
+
+## The workflow
+
+```
+smart-branch  →  (work)  →  smart-commit  →  smart-pr  →  smart-changelog
+     🌿                           💬               🔗              📋
 ```
 
 ---
@@ -86,9 +97,83 @@ chore(deps): bump react-navigation to v6.8.1
 
 ---
 
+## smart-pr
+
+Analyzes all commits in your branch, generates a PR title and description, then opens the PR after your confirmation.
+
+**Triggers on:** "quiero abrir un PR", "create a PR", "open pull request", "subir para review"
+
+**PR description includes:**
+- What changed
+- Why
+- List of changes by module
+- How to test
+
+**Example:**
+```
+feat(checkout): add guest checkout flow
+
+## What changed
+Added support for guest checkout, allowing users to complete a purchase without an account.
+
+## Why
+Users were dropping off at the sign-up step during checkout.
+
+## Changes
+- feat(checkout): add guest option on the cart screen
+- fix(order): handle missing user ID for guest orders
+
+## How to test
+1. Add an item to your cart without logging in
+2. Tap checkout and verify the guest option appears
+3. Complete a test purchase
+```
+
+**Flow:**
+1. Claude reads all commits ahead of main
+2. Generates title + description
+3. You confirm
+4. Claude runs `gh pr create` — never before your ok
+
+---
+
+## smart-changelog
+
+Reads your commit history and generates or updates `CHANGELOG.md` in the project root.
+
+**Triggers on:** "update changelog", "generate changelog", "actualizar changelog", "release notes"
+
+**Format:** [Keep a Changelog](https://keepachangelog.com) standard
+
+**Example output:**
+```markdown
+## [1.3.0] - 2026-03-11
+
+### Features
+- feat(checkout): add guest checkout flow
+- feat(profile): allow users to upload a profile picture
+
+### Bug Fixes
+- fix(auth): redirect to login when session expires
+
+### Maintenance
+- chore(deps): bump react-navigation to v6.8.1
+```
+
+**Flow:**
+1. Claude reads commits since the last tag (or all if no tags)
+2. Groups changes by type
+3. Shows you the new entry
+4. You confirm
+5. Claude writes to CHANGELOG.md — never before your ok
+
+---
+
 ## Uninstall
 
 ```bash
 rm -rf ~/.claude/skills/smart-branch
 rm -rf ~/.claude/skills/smart-commit
+rm -rf ~/.claude/skills/smart-pr
+rm -rf ~/.claude/skills/smart-changelog
 ```
